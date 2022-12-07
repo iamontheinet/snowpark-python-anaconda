@@ -38,13 +38,13 @@ def write_package_details(col, package):
     noarch = package.find_all("td")[10].text
 
     col.subheader(p_name)
-    col.write(p_summary)
     doc_link = f"<a href=\'{p_docs_link['href']}\' target=\'_blank\'>Docs</a>" if p_docs_link else "Docs: N/A"
     git_link = f"<a href=\'{p_gits_link['href']}\' target=\'_blank\'>GitHub</a>" if p_gits_link else "GitHub: N/A"
     docs_and_git_links = f"{doc_link} | {git_link}"
     col.caption(f"Latest version: {p_version} | License: {p_license if p_license else 'N/A'}")
     col.caption(f"linux-64: {'✅' if linux_64 else 'N/A'} | linux-aarch64: {'✅' if linux_aarch64 else 'N/A'} | osx-64: {'✅' if osx_64 else 'N/A'} | osx-arm64: {'✅' if osx_arm64 else 'N/A'} | win-64: {'✅' if win_64 else 'N/A'} | noarch: {'✅' if noarch else 'N/A'}")
     col.caption(docs_and_git_links, unsafe_allow_html = True) 
+    col.write(p_summary)
 
 def display_data_as_blocks(packages, this_is_a_test=True):
     col1, col2, col3 = st.columns(3, gap='small')
