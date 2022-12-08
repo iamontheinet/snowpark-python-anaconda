@@ -17,6 +17,22 @@ st.set_page_config(
      }
 )
 
+st.markdown("""
+    <style type="text/css">
+    blockquote {
+        margin: 1em 0px 1em -1px;
+        padding: 0px 0px 0px 1.2em;
+        font-size: 20px;
+        border-left: 5px solid rgb(230, 234, 241);
+        background-color: rgb(129, 164, 182);
+    }
+    blockquote p {
+        font-size: 30px;
+        color: #000000;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 def get_packages_data(url):
     # Make a GET request to the URL
     response = requests.get(repo_anaconda_com_url)
@@ -33,7 +49,7 @@ def write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm
     p_docs_link = package.find_all("td")[2].a
     p_gits_link = package.find_all("td")[3].a
 
-    col.code(p_name)
+    col.markdown(" > " + p_name)
     doc_link = f"<a href=\'{p_docs_link['href']}\' target=\'_blank\'>Docs</a>" if p_docs_link else "Docs: N/A"
     git_link = f"<a href=\'{p_gits_link['href']}\' target=\'_blank\'>GitHub</a>" if p_gits_link else "GitHub: N/A"
     docs_and_git_links = f"{doc_link} | {git_link}"
