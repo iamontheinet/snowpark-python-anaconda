@@ -4,9 +4,12 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
+APP_ICON_URL = "snowpark-icon.png"
+
 # Setup web page
 st.set_page_config(
      page_title="Snowpark Python Packages in Snowflake Conda Channel",
+     page_icon=APP_ICON_URL,
      layout="wide",
      menu_items={
          'Get Help': 'https://developers.snowflake.com',
@@ -39,7 +42,7 @@ def write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm
     col.write(p_summary)
     return 1
 
-def display_data_as_blocks(packages, this_is_a_test=False):
+def display_package_as_blocks(packages, this_is_a_test=False):
     col1, col2, col3 = st.columns(3, gap='small')
     p_container = st.container()
     col_index = 0
@@ -77,7 +80,12 @@ def display_data_as_blocks(packages, this_is_a_test=False):
         if this_is_a_test and p_index == 9:
             break;
 
-st.header(f"Snowpark Python Packages in Snowflake Conda Channel")
+with st.container():
+    col1,col2,_,_ = st.columns([1,14,1,1],gap="large")
+    with col1:
+        st.image(APP_ICON_URL, width=80)
+    with col2:
+        st.header(f"Snowpark Python Packages in Snowflake Conda Channel")
 st.caption(f"App developed by [Dash](https://twitter.com/iamontheinet)")
 st.write(f"This application lists the Python packages from the Snowflake Conda channel that is maintained and supported by Anaconda. The Snowflake Cond channel has been built for use with <a href='https://www.snowflake.com/snowpark-for-python/'>Snowpark for Python</a>. By accessing or using the contents in the channel, you acknowledge and agree that you have read, understood, and agree to be bound by the <a href='https://legal.anaconda.com/policies/en/?name=terms-of-service#embedded-end-customer-terms' target='_blank'>Embedded End Customer Terms</a> to <a href='https://legal.anaconda.com/policies/en/?name=terms-of-service' target='_blank'>Anaconda's Terms of Service</a>.", unsafe_allow_html=True)
 
@@ -104,43 +112,6 @@ with st.container():
         p_noarch = st.checkbox('noarch')
 
 st.markdown("___")
-display_data_as_blocks(packages)
+display_package_as_blocks(packages)
 st.markdown("---")
 st.caption(f"Conda Channel Source: https://repo.anaconda.com/pkgs/snowflake/")
-
-# def organize_data(packages):
-#     package_names, package_summaries, package_versions, package_licenses, os1, os2, os3, os4, os5, os6, docs, gits = [],[],[],[],[],[],[],[],[],[],[],[]
-#     for package in packages:
-#         package_name = package.find("td", class_ = 'packagename')
-#         if package_name:
-#             package_names.append(package_name.text)
-#             package_versions.append(package.find("td", class_ = 'version').text)
-#             package_licenses.append(package.find("td", class_ = 'license').text)
-#             package_summaries.append(package.find("td", class_ = 'summary').text)
-
-#             os1.append(package.find_all("td")[5].text)
-#             os2.append(package.find_all("td")[6].text)
-#             os3.append(package.find_all("td")[7].text)
-#             os4.append(package.find_all("td")[8].text)
-#             os5.append(package.find_all("td")[9].text)
-#             os6.append(package.find_all("td")[10].text)
-
-#             docs_link = package.find_all("td")[2].a
-#             docs.append(f"<a href=\'{docs_link['href']}\' target=\'_blank\'>☞</a>" if docs_link else '')
-
-#             gits_link = package.find_all("td")[3].a
-#             gits.append(f"<a href=\'{gits_link['href']}\' target=\'_blank\'>☞</a>" if gits_link else '')
-
-#     data = pd.DataFrame(list(zip(package_names,package_versions,package_licenses,os1,os2,os3,os4,os5,os6,package_summaries,docs,gits)),
-#     columns=['Package Name','Latest Version','License','linux-64','linux-aarch64','osx-64','osx-arm64','win-64','noarch','Summary','Docs','GitHub'])
-#     return data
-
-# def display_data_as_list(data):
-#     st.write(data.style.set_table_styles([{'selector': 'th', 'props': [('text-align', 'left')]}]).to_html(escape = False), use_container_width=True, unsafe_allow_html = True)
-
-# with st.container():
-#     st.subheader(f"Snowpark for Python Resources")
-#     st.write("<a href='https://github.com/snowflakedb/snowpark-python'>Source Code</a>", unsafe_allow_html = True)
-#     st.write("<a href='https://docs.snowflake.com/en/developer-guide/snowpark/python/index.html'>Developer Guide</a>", unsafe_allow_html = True)
-#     st.write("<a href='https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/index.html'>API Reference</a>", unsafe_allow_html = True)
-#     st.write("<a href='https://github.com/Snowflake-Labs/snowpark-python-demos'>Demos</a>", unsafe_allow_html = True)
