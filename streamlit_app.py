@@ -95,14 +95,14 @@ total_packages = len(packages)
 st.write(f"Total packages as of today = **{total_packages}**. The curated packages in Snowflake Cond channel are available for you to use in <a href='https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udfs.html'>User-Defined Functions</a>, <a href='https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-tabular-functions.html'>User-Defined Table Functions</a>, and <a href='https://docs.snowflake.com/en/sql-reference/stored-procedures-python.html'>Stored Procedures</a> after you <a href='https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-packages.html#getting-started'>accept the terms</a>.", unsafe_allow_html=True)
 
 st.markdown("___")
-st.caption("Filter packages by platform. (Note: It applies OR operator.)")
+st.caption("Filter packages by platform. (Note: It applies an OR operator between the selected platforms.)")
 with st.container():
     cols = st.columns(6)
     oss = ['linux-64','linux-aarch64','osx-64','osx-arm64','win-64','noarch']
     os_chk = []
-    for col,os in zip(cols,oss):
+    for i, (col,os) in enumerate(zip(cols,oss)):
         with col:
-            os_chk.append(st.checkbox(os))
+            os_chk.append(st.checkbox(os,value=True) if i == 0 else st.checkbox(os))
 
 st.markdown("___")
 display_package_as_blocks(packages)
