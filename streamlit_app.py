@@ -6,11 +6,11 @@ import pandas as pd
 
 # Setup web page
 st.set_page_config(
-     page_title="Snowflake Snowpark for Python -- Conda Channel",
+     page_title="Snowpark Python Packages in Snowflake Conda Channel",
      layout="wide",
      menu_items={
          'Get Help': 'https://developers.snowflake.com',
-         'About': "This app is developed by dash[dot]desai[at]snowflake[dot]com"
+         'About': "This app is developed by dash.desai@snowflake.com"
      }
 )
 
@@ -39,7 +39,7 @@ def write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm
     col.write(p_summary)
     return 1
 
-def display_data_as_blocks(packages, this_is_a_test=True):
+def display_data_as_blocks(packages, this_is_a_test=False):
     col1, col2, col3 = st.columns(3, gap='small')
     p_container = st.container()
     col_index = 0
@@ -77,19 +77,19 @@ def display_data_as_blocks(packages, this_is_a_test=True):
         if this_is_a_test and p_index == 9:
             break;
 
+st.header(f"Snowpark Python Packages in Snowflake Conda Channel")
+st.caption(f"App developed by [Dash](https://twitter.com/iamontheinet)")
+st.write(f"The Snowflake Conda channel is maintained and supported by Anaconda. It has been built for use with <a href='https://www.snowflake.com/snowpark-for-python/'>Snowpark for Python</a>. By accessing or using the contents herein, you acknowledge and agree that you have read, understood, and agree to be bound by the <a href='https://legal.anaconda.com/policies/en/?name=terms-of-service#embedded-end-customer-terms' target='_blank'>Embedded End Customer Terms</a> to <a href='https://legal.anaconda.com/policies/en/?name=terms-of-service' target='_blank'>Anaconda's Terms of Service</a>.", unsafe_allow_html=True)
+
 repo_anaconda_com_url = 'https://repo.anaconda.com/pkgs/snowflake/'
 packages = get_packages_data(repo_anaconda_com_url)
 total_packages = len(packages)
-
-st.header(f"Snowpark for Python -- Python Packages in Snowflake Conda Channel")
-st.caption(f"App developed by [Dash](https://twitter.com/iamontheinet)")
-st.write(f"The Snowflake Conda channel is maintained and supported by Anaconda. It has been built for use with <a href='https://www.snowflake.com/snowpark-for-python/'>Snowpark for Python</a>. By accessing or using the contents herein, you acknowledge and agree that you have read, understood, and agree to be bound by the <a href='https://legal.anaconda.com/policies/en/?name=terms-of-service#embedded-end-customer-terms' target='_blank'>Embedded End Customer Terms</a> to <a href='https://legal.anaconda.com/policies/en/?name=terms-of-service' target='_blank'>Anaconda's Terms of Service</a>.", unsafe_allow_html=True)
 st.write(f"Total packages in this channel as of today = **{total_packages}**. These curated packages are available for you to use in <a href='https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udfs.html'>User-Defined Functions</a>, <a href='https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-tabular-functions.html'>User-Defined Table Functions</a>, and <a href='https://docs.snowflake.com/en/sql-reference/stored-procedures-python.html'>Stored Procedures</a> after <a href='https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-packages.html#getting-started'>accepting the terms</a>.", unsafe_allow_html=True)
 
 p_os = ['linux-64','linux-aarch64','osx-64','osx-arm64','win-64','noarch']
-p_selected_os = st.multiselect('Filter packages by OS. (Note: It applies OR operator)',p_os, default = ['linux-64'],label_visibility='visible')
+p_selected_os = st.multiselect('Filter packages by OS. (Note: It applies OR operator)',p_os,default=['linux-64'],label_visibility='visible')
 st.markdown("___")
-display_data_as_blocks(packages,False)
+display_data_as_blocks(packages)
 st.markdown("---")
 st.caption(f"Conda Channel Source: https://repo.anaconda.com/pkgs/snowflake/")
 
