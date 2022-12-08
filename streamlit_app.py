@@ -24,11 +24,11 @@ st.markdown("""
         padding: 0px 0px 0px 1.2em;
         font-size: 20px;
         border-left: 5px solid rgb(230, 234, 241);
-        background-color: rgb(129, 164, 182);
+        # background-color: rgb(129, 164, 182);
     }
     blockquote p {
         font-size: 30px;
-        color: #000000;
+        color: #FFFFFF;
     }
     </style>
 """, unsafe_allow_html=True)
