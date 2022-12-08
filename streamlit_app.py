@@ -17,6 +17,17 @@ st.set_page_config(
      }
 )
 
+# st.markdown("""
+#     <style type="text/css">
+#     div[data-testid="stVerticalBlock"] {
+#         border-width: 1px !important;
+#         border-radius: 2px !important;
+#         border-color: #FFFFFF !important;
+#         border-style: solid;
+#     }
+#     </style>
+# """, unsafe_allow_html=True)
+
 def get_packages_data(url):
     # Make a GET request to the URL
     response = requests.get(repo_anaconda_com_url)
@@ -33,7 +44,7 @@ def write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm
     p_docs_link = package.find_all("td")[2].a
     p_gits_link = package.find_all("td")[3].a
 
-    col.subheader(p_name)
+    col.code(p_name)
     doc_link = f"<a href=\'{p_docs_link['href']}\' target=\'_blank\'>Docs</a>" if p_docs_link else "Docs: N/A"
     git_link = f"<a href=\'{p_gits_link['href']}\' target=\'_blank\'>GitHub</a>" if p_gits_link else "GitHub: N/A"
     docs_and_git_links = f"{doc_link} | {git_link}"
@@ -58,19 +69,19 @@ def display_package_as_blocks(packages, this_is_a_test=False):
             win_64 = package.find_all("td")[9].text
             noarch = package.find_all("td")[10].text
 
-            # 'linux-64','linux-aarch64','osx-64','osx-arm64','win-64','noarch'
-            if ((linux_64 and p_linux_64) or \
-                (linux_aarch64 and p_linux_aarch64) or \
-                (osx_64 and p_osx_64) or \
-                (osx_arm64 and p_osx_arm64) or \
-                (win_64 and p_win_64) or \
-                (noarch and p_noarch)):
+            if ((linux_64 and os_chk[0]) or \
+                (linux_aarch64 and os_chk[1]) or \
+                (osx_64 and os_chk[2]) or \
+                (osx_arm64 and os_chk[3]) or \
+                (win_64 and os_chk[4]) or \
+                (noarch and os_chk[5])):
 
                 with p_container:
                     col = col1 if col_index == 1 else col2 if col_index == 2 else col3
                     p_index += write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm64, win_64, noarch)               
 
                 if (p_index % 3) == 0:
+                    # Stare/create a new row after writing out 3 packages in a row
                     col1, col2, col3 = st.columns(3, gap='small')
                     p_container = st.container()
                     col_index = 0
@@ -97,19 +108,12 @@ st.write(f"Total packages as of today = **{total_packages}**. The curated packag
 st.markdown("___")
 st.caption("Filter packages by platform. (Note: It applies OR operator.)")
 with st.container():
-    col1, col2, col3, col4, col5, col6 = st.columns(6)
-    with col1:
-        p_linux_64 = st.checkbox('linux-64',value=True)
-    with col2:
-        p_linux_aarch64 = st.checkbox('linux-aarch64')
-    with col3:
-        p_osx_64 = st.checkbox('osx-64')
-    with col4:
-        p_osx_arm64 = st.checkbox('osx-arm64')
-    with col5:
-        p_win_64 = st.checkbox('win-64')
-    with col6:
-        p_noarch = st.checkbox('noarch')
+    cols = st.columns(6)
+    oss = ['linux-64','linux-aarch64','osx-64','osx-arm64','win-64','noarch']
+    os_chk = []
+    for col,os in zip(cols,oss):
+        with col:
+            os_chk.append(st.checkbox(os))
 
 st.markdown("___")
 display_package_as_blocks(packages)
