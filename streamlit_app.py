@@ -56,12 +56,12 @@ def display_data_as_blocks(packages, this_is_a_test=False):
             noarch = package.find_all("td")[10].text
 
             # 'linux-64','linux-aarch64','osx-64','osx-arm64','win-64','noarch'
-            if ((linux_64 and 'linux-64' in p_selected_os) or \
-                (linux_aarch64 and 'linux-aarch64' in p_selected_os) or \
-                (osx_64 and 'osx-64' in p_selected_os) or \
-                (osx_arm64 and 'osx-arm64' in p_selected_os) or \
-                (win_64 and 'win-64' in p_selected_os) or \
-                (noarch and 'noarch' in p_selected_os)):
+            if ((linux_64 and p_linux_64) or \
+                (linux_aarch64 and p_linux_aarch64) or \
+                (osx_64 and p_osx_64) or \
+                (osx_arm64 and p_osx_arm64) or \
+                (win_64 and p_win_64) or \
+                (noarch and p_noarch)):
 
                 with p_container:
                     col = col1 if col_index == 1 else col2 if col_index == 2 else col3
@@ -86,8 +86,23 @@ packages = get_packages_data(repo_anaconda_com_url)
 total_packages = len(packages)
 st.write(f"Total packages in this channel as of today = **{total_packages}**. These curated packages are available for you to use in <a href='https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udfs.html'>User-Defined Functions</a>, <a href='https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-tabular-functions.html'>User-Defined Table Functions</a>, and <a href='https://docs.snowflake.com/en/sql-reference/stored-procedures-python.html'>Stored Procedures</a> after <a href='https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-packages.html#getting-started'>accepting the terms</a>.", unsafe_allow_html=True)
 
-p_os = ['linux-64','linux-aarch64','osx-64','osx-arm64','win-64','noarch']
-p_selected_os = st.multiselect('Filter packages by OS. (Note: It applies OR operator)',p_os,default=['linux-64'],label_visibility='visible')
+st.markdown("___")
+st.caption("Filter packages by platform. (Note: It applies OR operator.)")
+with st.container():
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    with col1:
+        p_linux_64 = st.checkbox('linux-64',value=True)
+    with col2:
+        p_linux_aarch64 = st.checkbox('linux-aarch64')
+    with col3:
+        p_osx_64 = st.checkbox('osx-64')
+    with col4:
+        p_osx_arm64 = st.checkbox('osx-arm64')
+    with col5:
+        p_win_64 = st.checkbox('win-64')
+    with col6:
+        p_noarch = st.checkbox('noarch')
+
 st.markdown("___")
 display_data_as_blocks(packages)
 st.markdown("---")
