@@ -34,9 +34,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 def get_packages_data(url):
-    # Make a GET request to the URL
     response = requests.get(repo_anaconda_com_url)
-    # Parse the HTML content
     soup = BeautifulSoup(response.content, 'html.parser')
     packages = soup.find("table").find_all("tr")
     return packages
@@ -74,24 +72,17 @@ def display_package_as_blocks(packages, this_is_a_test=False):
             win_64 = package.find_all("td")[9].text
             noarch = package.find_all("td")[10].text
 
-            if ((linux_64 and os_chk[0]) or \
-                (linux_aarch64 and os_chk[1]) or \
-                (osx_64 and os_chk[2]) or \
-                (osx_arm64 and os_chk[3]) or \
-                (win_64 and os_chk[4]) or \
-                (noarch and os_chk[5])):
+            with p_container:
+                col = col1 if col_index == 1 else col2 if col_index == 2 else col3
+                p_index += write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm64, win_64, noarch)               
 
-                with p_container:
-                    col = col1 if col_index == 1 else col2 if col_index == 2 else col3
-                    p_index += write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm64, win_64, noarch)               
-
-                if (p_index % 3) == 0:
-                    # Stare/create a new row after writing out 3 packages in a row
-                    col1, col2, col3 = st.columns(3, gap='small')
-                    p_container = st.container()
-                    col_index = 0
-                else:
-                    col_index += 1
+            if (p_index % 3) == 0:
+                # Stare/create a new row after writing out 3 packages in a row
+                col1, col2, col3 = st.columns(3, gap='small')
+                p_container = st.container()
+                col_index = 0
+            else:
+                col_index += 1
 
         if this_is_a_test and p_index == 9:
             break;
@@ -108,17 +99,18 @@ st.write(f"This application lists the Python packages from the Snowflake Conda c
 repo_anaconda_com_url = 'https://repo.anaconda.com/pkgs/snowflake/'
 packages = get_packages_data(repo_anaconda_com_url)
 total_packages = len(packages)
-st.write(f"Total packages as of today = **{total_packages}**. The curated packages in Snowflake Conda channel are available for you to use in <a href='https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udfs.html'>User-Defined Functions</a>, <a href='https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-tabular-functions.html'>User-Defined Table Functions</a>, and <a href='https://docs.snowflake.com/en/sql-reference/stored-procedures-python.html'>Stored Procedures</a> after you <a href='https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-packages.html#getting-started'>accept the terms</a>.", unsafe_allow_html=True)
+st.write(f"The curated packages in Snowflake Conda channel are available for you to use in <a href='https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udfs.html'>User-Defined Functions</a>, <a href='https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-tabular-functions.html'>User-Defined Table Functions</a>, and <a href='https://docs.snowflake.com/en/sql-reference/stored-procedures-python.html'>Stored Procedures</a> after you <a href='https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-packages.html#getting-started'>accept the terms</a>.", unsafe_allow_html=True)
+st.caption(f"Note: For a complete list and latest version of packages available, run query *SELECT package_name, max(version) FROM \"INFORMATION_SCHEMA\".\"PACKAGES\" WHERE LANGUAGE = \"pytho\" GROUP BY package_name ORDER BY 1;* in Snowsight in your Snowflake account.")
 
-st.markdown("___")
-st.caption("Filter packages by platform. (Note: It applies an OR operator between the selected platforms.)")
-with st.container():
-    cols = st.columns(6)
-    oss = ['linux-64','linux-aarch64','osx-64','osx-arm64','win-64','noarch']
-    os_chk = []
-    for i, (col,os) in enumerate(zip(cols,oss)):
-        with col:
-            os_chk.append(st.checkbox(os,value=True) if i == 0 else st.checkbox(os))
+# st.markdown("___")
+# st.caption("If you're developing locally, you can filter packages by platform. (Note: It applies an OR operator between the selected platforms.)")
+# with st.container():
+#     cols = st.columns(6)
+#     oss = ['linux-64','linux-aarch64','osx-64','osx-arm64','win-64','noarch']
+#     os_chk = []
+#     for i, (col,os) in enumerate(zip(cols,oss)):
+#         with col:
+#             os_chk.append(st.checkbox(os,value=True) if i == 0 else st.checkbox(os))
 
 st.markdown("___")
 display_package_as_blocks(packages)
