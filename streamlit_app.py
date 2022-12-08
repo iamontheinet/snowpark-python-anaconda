@@ -17,17 +17,6 @@ st.set_page_config(
      }
 )
 
-# st.markdown("""
-#     <style type="text/css">
-#     div[data-testid="stVerticalBlock"] {
-#         border-width: 1px !important;
-#         border-radius: 2px !important;
-#         border-color: #FFFFFF !important;
-#         border-style: solid;
-#     }
-#     </style>
-# """, unsafe_allow_html=True)
-
 def get_packages_data(url):
     # Make a GET request to the URL
     response = requests.get(repo_anaconda_com_url)
