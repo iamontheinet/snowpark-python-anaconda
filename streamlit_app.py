@@ -13,8 +13,7 @@ st.set_page_config(
      layout="wide",
      menu_items={
          'Get Help': 'https://developers.snowflake.com',
-         'About': "This app is developed by dash.desai@snowflake.com"
-         'View Source': "https://github.com/iamontheinet/snowpark-python-anaconda"
+         'About': "The source code for this application can be accessed on GitHub https://github.com/iamontheinet/snowpark-python-anaconda"
      }
 )
 
