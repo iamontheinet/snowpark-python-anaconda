@@ -114,24 +114,39 @@ def display_packages_as_blocks():
     for i in range(p_start,p_end):
         package = packages[i]
         package_name = package.find("td", class_ = 'packagename')
-        if package_name:
-            linux_64 = package.find_all("td")[5].text
-            linux_aarch64 = package.find_all("td")[6].text
-            osx_64 = package.find_all("td")[7].text
-            osx_arm64 = package.find_all("td")[8].text
-            win_64 = package.find_all("td")[9].text
-            noarch = package.find_all("td")[10].text
+        linux_64 = package.find_all("td")[5].text
+        linux_aarch64 = package.find_all("td")[6].text
+        osx_64 = package.find_all("td")[7].text
+        osx_arm64 = package.find_all("td")[8].text
+        win_64 = package.find_all("td")[9].text
+        noarch = package.find_all("td")[10].text
 
-            with p_container:
-                col = col1 if col_index == 1 else col2 if col_index == 2 else col3
-                write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm64, win_64, noarch)             
+        with p_container:
+            col = col1 if col_index == 0 else col2 if col_index == 1 else col3
+            write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm64, win_64, noarch)             
 
-            if (i % 3) == 0:
-                col1, col2, col3 = st.columns(3, gap='small')
-                p_container = st.container()
-                col_index = 0
-            else:
-                col_index += 1
+        if (i % 3) == 0:
+            col1, col2, col3 = st.columns(3, gap='small')
+            p_container = st.container()
+            col_index = 0
+        else:
+            col_index += 1
+
+    st.markdown("---")
+    st.caption(f"Packages {p_start} to {p_end-1} of {p_total} | Conda Channel Source: https://repo.anaconda.com/pkgs/snowflake/")
+
+repo_anaconda_com_url = 'https://repo.anaconda.com/pkgs/snowflake/'
+packages = get_packages_data(repo_anaconda_com_url)
+
+page_names_to_funcs = {
+    "Load packages 1 to 400": display_packages_as_blocks,
+    "Load packages 401 to 800": display_packages_as_blocks,
+    "Load packages 801 to 1200": display_packages_as_blocks,
+    "Load packages 1201 to 1600": display_packages_as_blocks   
+}
+selected_page = st.sidebar.selectbox("Select range", page_names_to_funcs.keys())
+st.sidebar.markdown("---")
+st.sidebar.write(f"Note: For a complete list and latest version of packages available, run SQL *'SELECT package_name, max(version) FROM \"INFORMATION_SCHEMA\".\"PACKAGES\" WHERE LANGUAGE = \"python\" GROUP BY package_name ORDER BY 1*' in <a href='https://docs.snowflake.com/en/user-guide/ui-snowsight.html'>Snowsight</a> in your Snowflake account.", unsafe_allow_html = True)
 
 with st.container():
     col1,col2,_,_ = st.columns([1,14,1,1],gap="large")
@@ -141,27 +156,11 @@ with st.container():
         st.header(f"Snowpark Python Packages in Snowflake Conda Channel")
 st.caption(f"App developed by [Dash](https://twitter.com/iamontheinet)")
 st.write(f"This application lists the Python packages from the Snowflake Conda channel that is maintained and supported by Anaconda. The Snowflake Conda channel has been built for use with <a href='https://www.snowflake.com/snowpark-for-python/'>Snowpark for Python</a>. By accessing or using the contents in the channel, you acknowledge and agree that you have read, understood, and agree to be bound by the <a href='https://legal.anaconda.com/policies/en/?name=terms-of-service#embedded-end-customer-terms' target='_blank'>Embedded End Customer Terms</a> to <a href='https://legal.anaconda.com/policies/en/?name=terms-of-service' target='_blank'>Anaconda's Terms of Service</a>.", unsafe_allow_html=True)
-
-repo_anaconda_com_url = 'https://repo.anaconda.com/pkgs/snowflake/'
-packages = get_packages_data(repo_anaconda_com_url)
 st.write(f"The curated packages in Snowflake Conda channel are available for you to use in <a href='https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udfs.html'>User-Defined Functions</a>, <a href='https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-tabular-functions.html'>User-Defined Table Functions</a>, and <a href='https://docs.snowflake.com/en/sql-reference/stored-procedures-python.html'>Stored Procedures</a> after you <a href='https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-packages.html#getting-started'>accept the terms</a>.", unsafe_allow_html=True)
-
 st.markdown("___")
 
-page_names_to_funcs = {
-    "Load packages 1 to 400": display_packages_as_blocks,
-    "Load packages 401 to 800": display_packages_as_blocks,
-    "Load packages 801 to 1200": display_packages_as_blocks,
-    "Load packages 1201 to 1600": display_packages_as_blocks   
-}
-
-selected_page = st.sidebar.selectbox("Select range", page_names_to_funcs.keys())
-st.sidebar.markdown("---")
-st.sidebar.write(f"Note: For a complete list and latest version of packages available, run query *SELECT package_name, max(version) FROM \"INFORMATION_SCHEMA\".\"PACKAGES\" WHERE LANGUAGE = \"python\" GROUP BY package_name ORDER BY 1;* in Snowsight in your Snowflake account.")
 page_names_to_funcs[selected_page]()
 
-st.markdown("---")
-st.caption(f"Conda Channel Source: https://repo.anaconda.com/pkgs/snowflake/")
 
 # -------------
 # st.markdown("___")
