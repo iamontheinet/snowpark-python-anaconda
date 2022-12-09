@@ -34,6 +34,9 @@ st.markdown("""
         background-color: rgb(129, 164, 182);
         color: #FFFFFF;
     }
+    [aria-selected="true"] {
+         color: #000000;
+    }
     </style>
 """, unsafe_allow_html=True)
 
