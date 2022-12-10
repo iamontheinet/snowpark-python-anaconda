@@ -62,38 +62,6 @@ def write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm
     col.caption(f"linux-64: {'✅' if linux_64 else 'N/A'} | linux-aarch64: {'✅' if linux_aarch64 else 'N/A'} | osx-64: {'✅' if osx_64 else 'N/A'} | osx-arm64: {'✅' if osx_arm64 else 'N/A'} | win-64: {'✅' if win_64 else 'N/A'} | noarch: {'✅' if noarch else 'N/A'}")
     col.write(p_summary)
 
-def display_all_packages_as_blocks(this_is_a_test=False):
-    col1, col2, col3 = st.columns(3, gap='small')
-    p_container = st.container()
-    col_index = 0
-    p_index = 0
-    total_packages = len(packages)
-    for i in range(0,total_packages):
-        package = packages[i]
-        package_name = package.find("td", class_ = 'packagename')
-        if package_name:
-            linux_64 = package.find_all("td")[5].text
-            linux_aarch64 = package.find_all("td")[6].text
-            osx_64 = package.find_all("td")[7].text
-            osx_arm64 = package.find_all("td")[8].text
-            win_64 = package.find_all("td")[9].text
-            noarch = package.find_all("td")[10].text
-
-            with p_container:
-                col = col1 if col_index == 1 else col2 if col_index == 2 else col3
-                write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm64, win_64, noarch)   
-                p_index += 1            
-
-            if (p_index % 3) == 0:
-                col1, col2, col3 = st.columns(3, gap='small')
-                p_container = st.container()
-                col_index = 0
-            else:
-                col_index += 1
-
-        if this_is_a_test and p_index == 9:
-            break;
-
 def display_packages_as_blocks():
     col1, col2, col3 = st.columns(3, gap='small')
     p_container = st.container()
@@ -161,7 +129,6 @@ st.markdown("___")
 
 page_names_to_funcs[selected_page]()
 
-
 # -------------
 # st.markdown("___")
 # st.caption("If you're developing locally, you can filter packages by platform. (Note: It applies an OR operator between the selected platforms.)")
@@ -172,3 +139,35 @@ page_names_to_funcs[selected_page]()
 #     for i, (col,os) in enumerate(zip(cols,oss)):
 #         with col:
 #             os_chk.append(st.checkbox(os,value=True) if i == 0 else st.checkbox(os))
+
+# def display_all_packages_as_blocks(this_is_a_test=False):
+#     col1, col2, col3 = st.columns(3, gap='small')
+#     p_container = st.container()
+#     col_index = 0
+#     p_index = 0
+#     total_packages = len(packages)
+#     for i in range(0,total_packages):
+#         package = packages[i]
+#         package_name = package.find("td", class_ = 'packagename')
+#         if package_name:
+#             linux_64 = package.find_all("td")[5].text
+#             linux_aarch64 = package.find_all("td")[6].text
+#             osx_64 = package.find_all("td")[7].text
+#             osx_arm64 = package.find_all("td")[8].text
+#             win_64 = package.find_all("td")[9].text
+#             noarch = package.find_all("td")[10].text
+
+#             with p_container:
+#                 col = col1 if col_index == 1 else col2 if col_index == 2 else col3
+#                 write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm64, win_64, noarch)   
+#                 p_index += 1            
+
+#             if (p_index % 3) == 0:
+#                 col1, col2, col3 = st.columns(3, gap='small')
+#                 p_container = st.container()
+#                 col_index = 0
+#             else:
+#                 col_index += 1
+
+#         if this_is_a_test and p_index == 9:
+#             break;
