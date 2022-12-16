@@ -46,7 +46,7 @@ def get_packages_data(url):
     packages = soup.find("table").find_all("tr")
     return packages
 
-def write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm64, win_64, noarch):
+def write_package_details(col, package):
     p_name = package.find("td", class_ = 'packagename').text
     p_version = package.find("td", class_ = 'version').text
     p_license = package.find("td", class_ = 'license').text
@@ -59,7 +59,6 @@ def write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm
     git_link = f"<a href=\'{p_gits_link['href']}\' target=\'_blank\'>GitHub</a>" if p_gits_link else "GitHub: N/A"
     docs_and_git_links = f"{doc_link} | {git_link}"
     col.caption(f"Latest version: {p_version} | License: {p_license if p_license else 'N/A'} | {docs_and_git_links}", unsafe_allow_html = True)
-    col.caption(f"linux-64: {'✅' if linux_64 else 'N/A'} | linux-aarch64: {'✅' if linux_aarch64 else 'N/A'} | osx-64: {'✅' if osx_64 else 'N/A'} | osx-arm64: {'✅' if osx_arm64 else 'N/A'} | win-64: {'✅' if win_64 else 'N/A'} | noarch: {'✅' if noarch else 'N/A'}")
     col.write(p_summary)
 
 def display_packages_as_blocks():
@@ -81,17 +80,19 @@ def display_packages_as_blocks():
 
     for i in range(p_start,p_end):
         package = packages[i]
-        package_name = package.find("td", class_ = 'packagename')
-        linux_64 = package.find_all("td")[5].text
-        linux_aarch64 = package.find_all("td")[6].text
-        osx_64 = package.find_all("td")[7].text
-        osx_arm64 = package.find_all("td")[8].text
-        win_64 = package.find_all("td")[9].text
-        noarch = package.find_all("td")[10].text
 
         with p_container:
             col = col1 if col_index == 0 else col2 if col_index == 1 else col3
-            write_package_details(col, package, linux_64, linux_aarch64, osx_64, osx_arm64, win_64, noarch)             
+
+            # linux_64 = package.find_all("td")[5].text
+            # linux_aarch64 = package.find_all("td")[6].text
+            # osx_64 = package.find_all("td")[7].text
+            # osx_arm64 = package.find_all("td")[8].text
+            # win_64 = package.find_all("td")[9].text
+            # noarch = package.find_all("td")[10].text
+            # write_package_details_with_os(col, package, linux_64, linux_aarch64, osx_64, osx_arm64, win_64, noarch)   
+          
+            write_package_details(col, package)             
 
         if (i % 3) == 0:
             col1, col2, col3 = st.columns(3, gap='small')
@@ -171,3 +172,19 @@ page_names_to_funcs[selected_page]()
 
 #         if this_is_a_test and p_index == 9:
 #             break;
+
+# def write_package_details_with_os(col, package, linux_64, linux_aarch64, osx_64, osx_arm64, win_64, noarch):
+#     p_name = package.find("td", class_ = 'packagename').text
+#     p_version = package.find("td", class_ = 'version').text
+#     p_license = package.find("td", class_ = 'license').text
+#     p_summary = package.find("td", class_ = 'summary').text
+#     p_docs_link = package.find_all("td")[2].a
+#     p_gits_link = package.find_all("td")[3].a
+
+#     col.markdown(" > " + p_name)
+#     doc_link = f"<a href=\'{p_docs_link['href']}\' target=\'_blank\'>Docs</a>" if p_docs_link else "Docs: N/A"
+#     git_link = f"<a href=\'{p_gits_link['href']}\' target=\'_blank\'>GitHub</a>" if p_gits_link else "GitHub: N/A"
+#     docs_and_git_links = f"{doc_link} | {git_link}"
+#     col.caption(f"Latest version: {p_version} | License: {p_license if p_license else 'N/A'} | {docs_and_git_links}", unsafe_allow_html = True)
+#     col.caption(f"linux-64: {'✅' if linux_64 else 'N/A'} | linux-aarch64: {'✅' if linux_aarch64 else 'N/A'} | osx-64: {'✅' if osx_64 else 'N/A'} | osx-arm64: {'✅' if osx_arm64 else 'N/A'} | win-64: {'✅' if win_64 else 'N/A'} | noarch: {'✅' if noarch else 'N/A'}")
+#     col.write(p_summary)
